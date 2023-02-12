@@ -10,6 +10,16 @@ RSpec.describe SchedulingService do
     ]
   end
 
+  let(:too_many_meetings) do
+    [
+      { name: "Meeting 1", duration: 3, type: :onsite },
+      { name: "Meeting 5", duration: 3, type: :onsite },
+      { name: "Meeting 2", duration: 2, type: :offsite },
+      { name: "Meeting 3", duration: 1, type: :offsite },
+      { name: "Meeting 4", duration: 0.5, type: :onsite }
+    ]
+  end
+
   let(:sorted_meetings) do
     [
       { name: "Meeting 2", duration: 2, type: :offsite },
@@ -21,6 +31,26 @@ RSpec.describe SchedulingService do
 
   let(:subject) do
     SchedulingService.new(meetings:)
+  end
+
+  context "#call" do
+    it "generates an array of meetings if all meetings fit" do
+      ss = SchedulingService.new(meetings: [{ name: "Meeting 2", duration: 2, type: :offsite }])
+
+      expect(ss.call).to eql(
+        [
+          {:end_time=>Time.new(2021, 12, 13, 11,30,00),
+           :name=>"Meeting 2",
+           :start_time=>Time.new(2021, 12 ,13, 9, 0, 0)
+          }
+        ])
+    end
+
+    it "generates an empty arra if not all meetings fit" do
+      ss = SchedulingService.new(meetings: too_many_meetings)
+
+      expect(ss.call).to eql([])
+    end
   end
 
   context "#calculate_duration" do
