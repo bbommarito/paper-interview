@@ -74,9 +74,9 @@ class SchedulingService
   def can_it_fit?(current_time:, meeting:)
       # We need to know if it is an offsite or onsite meeting as offsite meetings
       # require a 30 minute padding.
-      duration = meeting[:type] == :offsite ? meeting[:duration] + 0.5 : meeting[:duration]
+      duration = calculate_duration(meeting_type: meeting[:type], meeting_duration: meeting[:duration])
 
-      current_time + (duration * 60 * 60) <= end_time
+      current_time + duration <= end_time
   end
 
   # @returns [Array] of sorted meetings
