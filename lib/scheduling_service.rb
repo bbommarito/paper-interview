@@ -41,8 +41,10 @@ class SchedulingService
       # I'm not usually a fan of doing an unless; end but I also hate
       # negating a boolean so here we are.
       unless can_it_fit?(current_time:, meeting:)
-        puts "Cannot fit #{meeting[:name]} into current schedule" 
-        next
+        schedule = []
+        break
+        # puts "Cannot fit #{meeting[:name]} into current schedule" 
+        # next
       end
 
       # Now, let's get these meetings scheduled, shall we? Oh, we shall.
