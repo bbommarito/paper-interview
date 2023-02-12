@@ -22,6 +22,18 @@ class SchedulingService
     @end_time = Time.new(2021, 12, 13, 17, 0, 0)
   end
 
+  # @param current_time: [Time] the current time
+  # @param meeting: [Hash] the current meeting
+  # @returns [Boolean]
+  def can_it_fit(current_time:, meeting:)
+      # We need to know if it is an offsite or onsite meeting as offsite meetings
+      # require a 30 minute padding.
+
+      duration = meeting[:type] == :offsite ? meeting[:duration] + 0.5 : meeting[:duration]
+
+      current_time + (duration * 60 * 60) < end_time
+  end
+
   def call
     # Ah, an empty schedule. Truly, my favorite thing to see, though
     # it's a shame it won't be empty for long.
@@ -32,17 +44,17 @@ class SchedulingService
 
     sorted_meetings.each do |meeting|
       # Let's first check if the meeting will fit within the
-      # alloted schedule
+      # alloted schedule.
+      # I know the instructions hinted at just bombing out if the meeting can't fit
+      # but that doesn't make sense to me. If this was a real world application
+      # the user may want to know what meeting can't fit, and see a schedule minus
+      # that meeting.
 
-      # We need to know if it is an offsite or onsite meeting as offsite meetings
-      # require a 30 minute padding.
-      duration = meeting[:type] == :offsite ? meeting[:duration] + 0.5 : meeting[:duration]
-
-      if current_time + (duration * 60 * 60) > end_time
-        # If it is, we'll break out and alert the user as to what meeting
-        # won't fit.
-        puts "Cannot fit #{meeting[:name]} into current schedule"
-        break
+      # I'm not usually a fan of doing an unless; end but I also hate
+      # negating a boolean so here we are.
+      unless can_it_fit(current_time:, meeting:)
+        puts "Cannot fit #{meeting[:name]} into current schedule" 
+        next
       end
 
       # Now, let's get these meetings scheduled, shall we? Oh, we shall.
@@ -61,6 +73,7 @@ class SchedulingService
 
       schedule << { name: meeting[:name], start_time: start_meeting_time, end_time: end_meeting_time }
     end
+    puts schedule
   end
 
   # @return [Array] of sorted meetings
