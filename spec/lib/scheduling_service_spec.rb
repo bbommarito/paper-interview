@@ -46,7 +46,7 @@ RSpec.describe SchedulingService do
         ])
     end
 
-    it "generates an empty arra if not all meetings fit" do
+    it "generates an empty array if not all meetings fit" do
       ss = SchedulingService.new(meetings: too_many_meetings)
 
       expect(ss.call).to eql([])
