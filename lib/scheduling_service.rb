@@ -16,6 +16,7 @@ class SchedulingService
     puts "Oh, hai!"
   end
 
+  # @return [Array] of sorted meetings
   def sort_meetings
     meetings.sort { |a,b| a[:type] <=> b[:type] }
   end
