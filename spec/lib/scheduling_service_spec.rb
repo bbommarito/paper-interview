@@ -27,13 +27,13 @@ RSpec.describe SchedulingService do
     it "returns false if the meeting cannot fit" do
       meeting = { name: "Meeting 2", duration: 2, type: :offsite }
       current_time = Time.new(2021, 12, 13, 15, 00)
-      expect(subject.can_it_fit(meeting:, current_time:)).to be_falsey
+      expect(subject.can_it_fit?(meeting:, current_time:)).to be_falsey
     end
 
     it "returns true if the meeting can fit" do
       meeting = { name: "Meeting 2", duration: 2, type: :offsite }
       current_time = Time.new(2021, 12, 13, 14, 00)
-      expect(subject.can_it_fit(meeting:, current_time:)).to be_truthy
+      expect(subject.can_it_fit?(meeting:, current_time:)).to be_truthy
     end
   end
 

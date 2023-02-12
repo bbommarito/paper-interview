@@ -40,7 +40,7 @@ class SchedulingService
 
       # I'm not usually a fan of doing an unless; end but I also hate
       # negating a boolean so here we are.
-      unless can_it_fit(current_time:, meeting:)
+      unless can_it_fit?(current_time:, meeting:)
         puts "Cannot fit #{meeting[:name]} into current schedule" 
         next
       end
@@ -70,7 +70,7 @@ class SchedulingService
   # @param current_time: [Time] the current time
   # @param meeting: [Hash] the current meeting
   # @returns [Boolean]
-  def can_it_fit(current_time:, meeting:)
+  def can_it_fit?(current_time:, meeting:)
       # We need to know if it is an offsite or onsite meeting as offsite meetings
       # require a 30 minute padding.
       duration = meeting[:type] == :offsite ? meeting[:duration] + 0.5 : meeting[:duration]
