@@ -61,6 +61,10 @@ class SchedulingService
 
       schedule << { name: meeting[:name], start_time: start_meeting_time, end_time: end_meeting_time }
     end
+
+    schedule.each do |meeting|
+      puts "#{meeting[:start_time].strftime('%-l:%M %p')} - #{meeting[:end_time].strftime('%-l:%M %p')} - #{meeting[:name]}"
+    end
   end
 
   # @param current_time: [Time] the current time
