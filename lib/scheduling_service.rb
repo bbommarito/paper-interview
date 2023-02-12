@@ -10,19 +10,19 @@ class SchedulingService
   # @return [Time] the end time of the day
   attr_reader :end_time
 
-  # @params meetings: [Array] the list of meetings
+  # @param meetings: [Array] the list of meetings
   def self.call(meetings:)
     self.new(meetings:).call
   end
 
-  # @params meetings: [Array] the list of meetings
+  # @param meetings: [Array] the list of meetings
   def initialize(meetings:)
     @meetings = meetings
     @start_time = Time.new(2021, 12, 13, 9, 0, 0) 
     @end_time = Time.new(2021, 12, 13, 17, 0, 0)
   end
 
-  # @returns [Array] of meetings, or no meetings if schedule cannot work.
+  # @return [Array] of meetings, or no meetings if schedule cannot work.
   def call
     # Ah, an empty schedule. Truly, my favorite thing to see, though
     # it's a shame it won't be empty for long.
@@ -62,7 +62,7 @@ class SchedulingService
 
   # @param meeting_type: [Symbol] of meeting type (either :onsite or :offsite)
   # @param meeting_duration: [Integer] of length of meeting
-  # @returns [Time] duration of meeting
+  # @return [Time] duration of meeting
   def calculate_duration(meeting_type:, meeting_duration:)
     # We need to know if it is an offsite or onsite meeting as offsite meetings
     # require a 30 minute padding.
@@ -72,14 +72,14 @@ class SchedulingService
 
   # @param current_time: [Time] the current time
   # @param meeting: [Hash] the current meeting
-  # @returns [Boolean]
+  # @return [Boolean]
   def can_it_fit?(current_time:, meeting:)
       duration = calculate_duration(meeting_type: meeting[:type], meeting_duration: meeting[:duration])
 
       current_time + duration <= end_time
   end
 
-  # @returns [Array] of sorted meetings
+  # @return [Array] of sorted meetings
   def sort_meetings
     meetings.sort { |a,b| a[:type] <=> b[:type] }
   end

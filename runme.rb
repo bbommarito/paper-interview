@@ -1,4 +1,6 @@
 require_relative './lib/scheduling_service.rb'
+require_relative './lib/schedule_printing_service.rb'
+
 meetings = [
   { name: "Meeting 1", duration: 1.5, type: :onsite },
   { name: "Meeting 2", duration: 2, type: :offsite },
@@ -14,9 +16,7 @@ meetings = [
 # ]
 
 schedule = SchedulingService.call(meetings:)
+printed_schedule = SchedulePrintingService.call(schedule:)
+schedule_strings = printed_schedule.join("\n")
 
-puts "Schedule cannot work as entered." if schedule.empty?
-
-schedule.each do |meeting|
-  puts "#{meeting[:start_time].strftime('%-l:%M %p')} - #{meeting[:end_time].strftime('%-l:%M %p')} - #{meeting[:name]}"
-end
+puts printed_schedule
