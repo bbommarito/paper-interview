@@ -22,6 +22,7 @@ class SchedulingService
     @end_time = Time.new(2021, 12, 13, 17, 0, 0)
   end
 
+  # @returns [Array] of meetings, or no meetings if schedule cannot work.
   def call
     # Ah, an empty schedule. Truly, my favorite thing to see, though
     # it's a shame it won't be empty for long.
