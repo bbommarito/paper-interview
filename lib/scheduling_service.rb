@@ -9,10 +9,14 @@ class SchedulingService
 
   # @params meetings: [Array] the list of meetings
   def initialize(meetings:)
-
+    @meetings = meetings
   end
 
   def call
     puts "Oh, hai!"
+  end
+
+  def sort_meetings
+    meetings.sort { |a,b| a[:type] <=> b[:type] }
   end
 end
