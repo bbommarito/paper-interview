@@ -74,7 +74,7 @@ class SchedulingService
       current_time + (duration * 60 * 60) < end_time
   end
 
-  # @return [Array] of sorted meetings
+  # @returns [Array] of sorted meetings
   def sort_meetings
     meetings.sort { |a,b| a[:type] <=> b[:type] }
   end
