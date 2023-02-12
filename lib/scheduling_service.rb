@@ -22,18 +22,6 @@ class SchedulingService
     @end_time = Time.new(2021, 12, 13, 17, 0, 0)
   end
 
-  # @param current_time: [Time] the current time
-  # @param meeting: [Hash] the current meeting
-  # @returns [Boolean]
-  def can_it_fit(current_time:, meeting:)
-      # We need to know if it is an offsite or onsite meeting as offsite meetings
-      # require a 30 minute padding.
-
-      duration = meeting[:type] == :offsite ? meeting[:duration] + 0.5 : meeting[:duration]
-
-      current_time + (duration * 60 * 60) < end_time
-  end
-
   def call
     # Ah, an empty schedule. Truly, my favorite thing to see, though
     # it's a shame it won't be empty for long.
@@ -73,7 +61,17 @@ class SchedulingService
 
       schedule << { name: meeting[:name], start_time: start_meeting_time, end_time: end_meeting_time }
     end
-    puts schedule
+  end
+
+  # @param current_time: [Time] the current time
+  # @param meeting: [Hash] the current meeting
+  # @returns [Boolean]
+  def can_it_fit(current_time:, meeting:)
+      # We need to know if it is an offsite or onsite meeting as offsite meetings
+      # require a 30 minute padding.
+
+      duration = meeting[:type] == :offsite ? meeting[:duration] + 0.5 : meeting[:duration]
+      current_time + (duration * 60 * 60) < end_time
   end
 
   # @return [Array] of sorted meetings
