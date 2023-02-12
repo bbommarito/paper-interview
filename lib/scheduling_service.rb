@@ -46,18 +46,10 @@ class SchedulingService
       end
 
       # Now, let's get these meetings scheduled, shall we? Oh, we shall.
-      if meeting[:type] == :onsite
-        start_meeting_time = current_time
-        end_meeting_time = current_time + (meeting[:duration] * 60 * 60)
-        current_time = end_meeting_time
-      elsif meeting[:type] == :offsite
-        start_meeting_time = current_time
 
-        # I pad at the end as we start the day with offsites and I assume the
-        # arrival at the offsite would be considered "beginning of day"
-        end_meeting_time = start_meeting_time + (meeting[:duration] * 60 * 60) + (0.5 * 60 * 60)
-        current_time = end_meeting_time
-      end
+      start_meeting_time = current_time
+      end_meeting_time = current_time + calculate_duration(meeting_type: meeting[:type], meeting_duration: meeting[:duration])
+      current_time = end_meeting_time
 
       schedule << { name: meeting[:name], start_time: start_meeting_time, end_time: end_meeting_time }
     end
@@ -65,6 +57,14 @@ class SchedulingService
     schedule.each do |meeting|
       puts "#{meeting[:start_time].strftime('%-l:%M %p')} - #{meeting[:end_time].strftime('%-l:%M %p')} - #{meeting[:name]}"
     end
+  end
+
+  # @param meeting_type: [Symbol] of meeting type (either :onsite or :offsite)
+  # @param meeting_duration: [Integer] of length of meeting
+  # @returns [Time] duration of meeting
+  def calculate_duration(meeting_type:, meeting_duration:)
+    meeting_duration += 0.5 if meeting_type == :offsite
+    meeting_duration * 60 * 60
   end
 
   # @param current_time: [Time] the current time
@@ -75,7 +75,7 @@ class SchedulingService
       # require a 30 minute padding.
       duration = meeting[:type] == :offsite ? meeting[:duration] + 0.5 : meeting[:duration]
 
-      current_time + (duration * 60 * 60) < end_time
+      current_time + (duration * 60 * 60) <= end_time
   end
 
   # @returns [Array] of sorted meetings

@@ -23,6 +23,22 @@ RSpec.describe SchedulingService do
     SchedulingService.new(meetings:)
   end
 
+  context "#calculate_duration" do
+    it "pads by 30 minutes for offsite meetings" do
+      current_time = Time.new(2021, 12, 13, 9, 00, 00)
+      expected_end_time = Time.new(2021, 12, 13, 12, 30, 00)
+      result = current_time + subject.calculate_duration(meeting_type: :offsite, meeting_duration: 3)
+      expect(result).to eql(expected_end_time)
+    end
+
+    it "does not pad onsite meetings" do
+      current_time = Time.new(2021, 12, 13, 9, 00, 00)
+      expected_end_time = Time.new(2021, 12, 13, 12, 00, 00)
+      result = current_time + subject.calculate_duration(meeting_type: :onsite, meeting_duration: 3)
+      expect(result).to eql(expected_end_time)
+    end
+  end
+
   context "#can_it_fit" do
     it "returns false if the meeting cannot fit" do
       meeting = { name: "Meeting 2", duration: 2, type: :offsite }
