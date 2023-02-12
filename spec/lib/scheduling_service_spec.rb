@@ -23,6 +23,20 @@ RSpec.describe SchedulingService do
     SchedulingService.new(meetings:)
   end
 
+  context "#can_it_fit" do
+    it "returns false if the meeting cannot fit" do
+      meeting = { name: "Meeting 2", duration: 2, type: :offsite }
+      current_time = Time.new(2021, 12, 13, 15, 00)
+      expect(subject.can_it_fit(meeting:, current_time:)).to be_falsey
+    end
+
+    it "returns true if the meeting can fit" do
+      meeting = { name: "Meeting 2", duration: 2, type: :offsite }
+      current_time = Time.new(2021, 12, 13, 14, 00)
+      expect(subject.can_it_fit(meeting:, current_time:)).to be_truthy
+    end
+  end
+
   context "#sort" do
     it "favors offsite meetings to start off the day" do
       # I'm sorting it so offsites start the day. Logically
