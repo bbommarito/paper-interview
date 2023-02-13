@@ -1,6 +1,6 @@
-require 'byebug'
-
 class SchedulingService
+  ONE_HOUR = 3600
+
   # @return [Array] the list of meetings
   attr_reader :meetings
 
@@ -67,7 +67,7 @@ class SchedulingService
     # We need to know if it is an offsite or onsite meeting as offsite meetings
     # require a 30 minute padding.
     meeting_duration += 0.5 if meeting_type == :offsite
-    meeting_duration * 60 * 60
+    meeting_duration * ONE_HOUR
   end
 
   # @param current_time: [Time] the current time
